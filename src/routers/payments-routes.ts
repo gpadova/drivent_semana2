@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { verifyTicket, validatePaymentBody } from "@/middlewares/payment-middleware";
+import { verifyTicket, verifyPaymentBody, verifyElementsBody } from "@/middlewares/payment-middleware";
+import { getPaymentById, insertPaymentInDb } from "@/controllers";
+import { authenticateToken } from "@/middlewares";
 
 const paymentRouter = Router();
 
-paymentRouter.get("/", verifyTicket, validatePaymentBody)
+paymentRouter.get("/", authenticateToken, verifyTicket, getPaymentById);
+paymentRouter.post("/process", authenticateToken, verifyPaymentBody, verifyElementsBody, insertPaymentInDb);
 
-export default paymentRouter;
+export { paymentRouter };

@@ -31,3 +31,39 @@ export async function getPaymentRepository(ticketId: string) {
         }
     });
 }
+
+export async function insertIntoDbRepository(payment: Payment) {
+    const cardLast = String(payment.cardData.number).slice(-4)
+    const ticketTypeId = await prisma.ticket.findUnique({
+        where: {
+            id: payment.ticketId
+        }
+    });
+    const ticketType = await prisma.ticketType.findUnique({
+        where: {
+            id: ticketTypeId.id
+        }
+    });
+    
+    return await prisma.payment.create({
+        data: {
+            ticketId: payment.ticketId,
+            value: ticketType.price,
+            cardIssuer: payment.cardData.issuer,
+            cardLastDigits: cardLast,
+            createdAt: new Date(),
+            updatedAt: null
+        },
+    });
+}
+
+export type Payment = {
+    ticketId: number,
+    cardData: {
+        issuer: string,
+        number: number,
+        name: number,
+        expirationDate: number,
+        cvv: number
+    };
+};

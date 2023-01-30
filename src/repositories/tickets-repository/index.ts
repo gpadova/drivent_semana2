@@ -13,7 +13,7 @@ async function getTicketsQuery(id: number) {
             TicketType: true 
         },
         orderBy: {
-            id: "desc"
+            id: "asc"
         }
     });
 }

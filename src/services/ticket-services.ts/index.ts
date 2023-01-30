@@ -1,4 +1,4 @@
-import ticketsRepository from "@/repositories/tickets-repository"
+import ticketsRepository from "@/repositories/tickets-repository";
 
 async function getTicketTypesService() {
     const types = await ticketsRepository.getTypesQuery();
@@ -13,7 +13,7 @@ async function findEnrollmentIdService(userId: number) {
     return ticketsRepository.findEnrollmentIdQuery(userId);
 }
 
-async function insertTicketService(ticketTypeId: number, enrollment:) {
+async function insertTicketService(ticketTypeId: number, enrollment: number) {
     const response = await ticketsRepository.insertTicketsQuery(ticketTypeId, enrollment);
     return response;
 }

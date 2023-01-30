@@ -24,12 +24,12 @@ app
     .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
-  connectDb();
-  return Promise.resolve(app);
+    connectDb();
+    return Promise.resolve(app);
 }
 
 export async function close(): Promise<void> {
-  await disconnectDB();
+    await disconnectDB();
 }
 
 export default app;

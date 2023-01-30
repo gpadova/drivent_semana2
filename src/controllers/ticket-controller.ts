@@ -5,7 +5,6 @@ import httpStatus from "http-status";
 import * as jwt from "jsonwebtoken";
 import { JWTPayload } from "@/middlewares";
 
-
 export async function getTicketTypes(_req: AuthenticatedRequest, res: Response) {
     try {
         const types = await ticketsService.getTicketTypesService();
@@ -26,23 +25,14 @@ export async function getTickets(req: AuthenticatedRequest, res: Response) {
             return res.sendStatus(404);
         }
 
-        const response = tickets.forEach((tic) => {
-            "id" : tic.id,
-            "status" : tic.status,
-            "ticketTypeId" : tic.ticketTypeId,
-            "enrollmentId" : findEnrollmentId.id,
-            "TicketType" : await ticketsService.getTicketTypeInfoByIdService(tic.enrollmentId),
-            "createdAt" : new Date,
-            "updatedAt" : new Date
-          })
-        return res.status(httpStatus.ACCEPTED).send(response);
+        return res.status(httpStatus.ACCEPTED).send(tickets);
     } catch (error) {
         return res.sendStatus(httpStatus.UNAVAILABLE_FOR_LEGAL_REASONS)
     }
 }
 
 export async function insertTickets(req: AuthenticatedRequest, res: Response) {
-    const ticketTypeId : number = req.body.ticketTypeId
+    const ticketTypeId: number = req.body.ticketTypeId;
     const authHeader = req.header("Authorization");
     const token = authHeader.split(" ")[1];
     const { userId } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
@@ -51,19 +41,10 @@ export async function insertTickets(req: AuthenticatedRequest, res: Response) {
         await ticketsService.insertTicketService(ticketTypeId, enrollment.id );
         
         const tickets = await  ticketsService.getTicketsService(enrollment.id)
-        const response = {
-            "id" : tickets[0].id,
-            "status" : tickets[0].status,
-            "ticketTypeId" : tickets[0].ticketTypeId,
-            "enrollmentId" : enrollment.id,
-            "TicketType" : await ticketsService.getTicketTypeInfoByIdService(enrollment.id),
-            "createdAt" : new Date,
-            "updatedAt" : new Date
-          }
-          return res.status(httpStatus.CREATED).send(tickets)
+        return res.status(httpStatus.CREATED).send(tickets[0]);
     } catch (error) {
-        console.log(error)
-        return res.sendStatus(httpStatus.CONFLICT)
+        console.log(error);
+        return res.sendStatus(httpStatus.CONFLICT);
     }
 }
 

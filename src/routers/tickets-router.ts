@@ -6,6 +6,6 @@ const ticketRouter = Router();
 
 ticketRouter.get("/types", authenticateToken, getTicketTypes);
 ticketRouter.get("/", authenticateToken, getTickets);
-ticketRouter.post("/", validateBody, authenticateToken, insertTickets );
+ticketRouter.post("/", authenticateToken, validateBody, authenticateToken, insertTickets );
 
 export { ticketRouter };
